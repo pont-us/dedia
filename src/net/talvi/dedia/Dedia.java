@@ -11,9 +11,9 @@ import java.text.Normalizer;
 
 public class Dedia {
 
-	Charset ascii;
-	CharsetEncoder asciiEnc;
-	CharsetDecoder asciiDec;
+	private Charset ascii;
+	private CharsetEncoder asciiEnc;
+	private CharsetDecoder asciiDec;
 	
 	public Dedia() {
 		ascii = Charset.forName("US-ASCII");
@@ -22,12 +22,15 @@ public class Dedia {
 		asciiEnc.onUnmappableCharacter(CodingErrorAction.IGNORE);
 	}
 	
+    /*
+     * Remove diacritics and ‘difficult’ characters from the string.
+     */
 	private String fix(String in) {
-		
 		String normal = Normalizer.normalize(in, Normalizer.Form.NFKD);
 		String out = null;
 		try {
-			out = asciiDec.decode(asciiEnc.encode(CharBuffer.wrap(normal))).toString();
+			out = asciiDec.decode(asciiEnc.encode(CharBuffer.wrap(normal))).
+                    toString();
 		} catch (CharacterCodingException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +41,6 @@ public class Dedia {
 	}
 	
 	public static void main(String[] args) {
-
 		Dedia d = new Dedia();
 		for (String filename: args) {
 			File file = new File(filename);
